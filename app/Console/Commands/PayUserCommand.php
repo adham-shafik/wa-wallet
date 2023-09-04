@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use App\Models\Transaction;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
+use App\Events\PaymentDoneEvent;
 
 class PayUserCommand extends Command
 {

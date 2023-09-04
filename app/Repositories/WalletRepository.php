@@ -15,7 +15,7 @@ class WalletRepository{
     public function withdraw($user_id, $amount){
         Transaction::create([
             'user_id' => $user_id,
-            'amount' => -1*$amount,
+            'amount' => $amount,
             'status' => 'pending',
         ]);
     }
