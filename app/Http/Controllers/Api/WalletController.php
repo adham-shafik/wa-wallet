@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreWalletRequest;
 use Illuminate\Http\Request;
 use App\Repositories\WalletRepository;
 use App\Models\Transaction;
@@ -32,7 +33,7 @@ class WalletController extends Controller{
         ]);
     }
 
-    public function store(Request $request){
+    public function store(StoreWalletRequest $request){
         $user_id = $request->user_id;
         $amount = $request->amount;
         if($amount>0){
