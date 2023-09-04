@@ -23,9 +23,7 @@ class WalletController extends Controller{
                                 ->selectRaw('SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) as total_withdrawals')
                                 ->selectRaw('SUM(amount) as total_balance')
                                 ->where('user_id', $user_id)
-                                ->toSql();
-        dd($results);
-                                // ->first();
+                                ->first();
 
         return response()->json([
             'total_balance' => $results->total_balance,
