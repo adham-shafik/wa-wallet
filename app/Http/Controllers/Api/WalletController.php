@@ -25,7 +25,7 @@ class WalletController extends Controller{
                                 ->where('user_id', $user_id)
                                 ->toSql();
         dd($results);
-                                ->first();
+                                // ->first();
 
         return response()->json([
             'total_balance' => $results->total_balance,
