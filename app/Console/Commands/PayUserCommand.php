@@ -26,20 +26,24 @@ class PayUserCommand extends Command
             ->groupBy('user_id')
             ->having('total_amount', '>', 0)
             ->get();
+            if($users_with_amounts->count()){
+                foreach ($users_with_amounts as $user) {
+                    $payment = Payment::create([
+                        'user_id'    =>$user->user_id,
+                        'amount'=>$user->total_amount
+                    ]);
 
-
-            foreach ($users_with_amounts as $user) {
-                $payment = Payment::create([
-                    'user_id'    =>$user->user_id,
-                    'amount'=>$user->total_amount
-                ]);
-
-                Transaction::whereUserId($user->user_id)->confirmed()->notPaid()->update(['payment_id' => $payment->id]);
+                    Transaction::whereUserId($user->user_id)->confirmed()->notPaid()->update(['payment_id' => $payment->id]);
+                    event(new PaymentDoneEvent($payment));
+                }
             }
+
+
+
 
             DB::commit();
 
-            event(new PaymentDoneEvent($payment));
+
 
 
         } catch (\Exception $e) {
