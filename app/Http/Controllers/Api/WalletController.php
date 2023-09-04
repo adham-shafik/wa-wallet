@@ -19,16 +19,18 @@ class WalletController extends Controller{
 
     public function index(Request $request){
         $user_id = $request->user_id;
-        $results = Transaction::selectRaw('SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) as total_deposits')
-                                ->selectRaw('SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) as total_withdrawals')
-                                ->selectRaw('SUM(amount) as total_balance')
+        $results = Transaction::selectRaw("SUM(CASE WHEN amount > 0 AND status='pending' THEN amount ELSE 0 END) as pending_total_deposits")
+                                ->selectRaw("SUM(CASE WHEN amount < 0 AND status='pending' THEN amount ELSE 0 END) as pending_total_withdrawals")
+                                ->selectRaw("SUM(CASE WHEN amount > 0 AND status='pending' THEN amount ELSE 0 END) as confirmed_total_deposits")
+                                ->selectRaw("SUM(CASE WHEN amount < 0 AND status='pending' THEN amount ELSE 0 END) as confirmed_total_deposits")
                                 ->where('user_id', $user_id)
                                 ->first();
 
         return response()->json([
-            'total_balance' => $results->total_balance,
-            'total_deposits' => $results->total_deposits,
-            'total_withdrawals' => $results->total_withdrawals,
+            'confirmed_total_deposits' => $results->confirmed_total_deposits,
+            'confirmed_total_withdrawals' => $results->confirmed_total_withdrawals,
+            'pending_total_deposits' => $results->pending_total_deposits,
+            'pending_total_withdrawals' => $results->pending_total_withdrawals,
         ]);
     }
 
