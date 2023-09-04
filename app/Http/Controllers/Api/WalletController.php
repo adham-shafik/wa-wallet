@@ -19,14 +19,13 @@ class WalletController extends Controller{
 
     public function index(Request $request){
         $user_id = $request->user_id;
-        $results = Transaction::selectRaw('SUM(CASE WHEN type = "deposit" THEN amount ELSE 0 END) as total_deposits')
-            ->selectRaw('SUM(CASE WHEN type = "withdraw" THEN amount ELSE 0 END) as total_withdrawals')
-            ->selectRaw('SUM(amount) as total_balance')
-            ->where('user_id', $user_id)
-            ->first();
+        $results = Transaction::selectRaw('SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END) as total_deposits')
+                                ->selectRaw('SUM(CASE WHEN amount < 0 THEN amount ELSE 0 END) as total_withdrawals')
+                                ->selectRaw('SUM(amount) as total_balance')
+                                ->where('user_id', $user_id)
+                                ->first();
 
         return response()->json([
-            'user_id' => $user_id,
             'total_balance' => $results->total_balance,
             'total_deposits' => $results->total_deposits,
             'total_withdrawals' => $results->total_withdrawals,
