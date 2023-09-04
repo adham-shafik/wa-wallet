@@ -34,7 +34,7 @@ class PayUserCommand extends Command
                     ]);
 
                     Transaction::whereUserId($user->user_id)->confirmed()->notPaid()->update(['payment_id' => $payment->id]);
-                    \Event::fire(new PaymentDoneEvent($payment));
+                    event(new PaymentDoneEvent($payment));
                 }
             }
 
