@@ -21,8 +21,8 @@ class WalletController extends Controller{
         $user_id = $request->user_id;
         $results = Transaction::selectRaw("SUM(CASE WHEN (amount > 0 AND status='pending') THEN amount ELSE 0 END) as pending_total_deposits")
                                 ->selectRaw("SUM(CASE WHEN (amount < 0 AND status='pending') THEN amount ELSE 0 END) as pending_total_withdrawals")
-                                ->selectRaw("SUM(CASE WHEN (amount > 0 AND status='pending') THEN amount ELSE 0 END) as confirmed_total_deposits")
-                                ->selectRaw("SUM(CASE WHEN (amount < 0 AND status='pending') THEN amount ELSE 0 END) as confirmed_total_deposits")
+                                ->selectRaw("SUM(CASE WHEN (amount > 0 AND status='confirmed') THEN amount ELSE 0 END) as confirmed_total_deposits")
+                                ->selectRaw("SUM(CASE WHEN (amount < 0 AND status='confirmed') THEN amount ELSE 0 END) as confirmed_total_withdrawals")
                                 ->where('user_id', $user_id)
                                 ->first();
 
